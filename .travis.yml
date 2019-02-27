@@ -1,40 +1,27 @@
-#
 warnings_are_errors: false
-
-language: r
-
+language: R
 os:
-  - linux
-  - osx
-
+- linux
+- osx
 r:
-  - release
-
+- release
 branches:
   only:
   - master
-
 sudo: false
-
 cache: packages
-
 notifications:
   email:
     on_success: change
     on_failure: change
-
 before_deploy:
-  #    - export PKGVERS=${`sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION`}
-    - export PKGVERS="2.6.12"
-    
+  - 'export PKGVER=$(sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)'
+  - "R CMD INSTALL -l /tmp --build FLCore_$PKGVER.tar.gz"
 deploy:
   provider: releases
   api_key:
-    secure: hd/AVHdIxPFEYvx66wCgXHfm0mFr/SGgiwRks8q9vSVHZwTrKoOyutt80p5lbPLSOaLIb818ZBAaxYuaKACoxZWblS/Rm+VfR3q/ct+y5Mx9EUQItuHTWbD/Y7wwcoa9myvh45U72ubve+UWbBjJUDNYrGrlX/OaJcIMu8QfGx4=
+    secure: ELukXpzu66heZ4F81674tbnvUTSD4rTgBQZL4f1LBimkWnCziLLp/Hu1qs3kzI6v+1AA8bXapH69p1eoCiqp78DnZ0IUvHPKxMVel1QEFO0y8LWSTyFbIWlvJHzNFFaaKAMRT2ibyeWhl/itXy7lhRM7fY0AUSDFI6SqfIRpXnMt6IsS2LCLFyaZ7pfRtvyTNXj/J6eObOn5TQ/x6qMjWw/KrcjtwhHULpU2zF1dJo5wJu4+q9Wy76aSHyMdIOQ7IPolDukFXhrro1H3J8n2zbm1uLaeccgBHfMMtgKU7gzeE7EfrKiHkxINIvfnIJMJr62gEKnHpGrCSoh3JFNFSo//o3DrBjr3xSXTBtZ0GmFNp6aXETrycMqmlYoTLr5T/fiBVj+c7DzMCoBSR00/6h+bcOwX0s2OwSb7zqilGOLP1DQi+5RDLhgWcT++0TfbeUZQnr68o31fdPzSmy7rTfrefyE1PleATLJbel4pFn+NxKAVtGFGELehdl00FQkOu+WBDwqeJ5pZ+hsHdFSlBo60Yza137pZzfxZASYRSFPZ6DBVB1YIYCCxa0j2dSXvy2Zsh54+WEthCbvTmN9h9PtG3vJMAa0E0sotza41mn5tfyhgxNGqkDsUIMe2a/wASQ94Trc0Bl2by58IbJbN8JBtR5OkxrA8UUHsmVqT02A=
+  file: /tmp/FLCore_$PKGVER.tgz
   skip_cleanup: true
-  draft: true
-  file: FLCore_${PKGVERS}.tgz
   on:
-    os: osx
-    branch: master
-    repo: flr/FLCore
+    repo: iambaim/FLCore
