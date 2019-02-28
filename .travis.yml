@@ -14,13 +14,16 @@ notifications:
   email:
     on_success: change
     on_failure: change
-before_deploy:
+after_success:
   # Get PKGVER
   - 'export PKGVER=$(sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)'
-  # Build binary and save it
+  - 'export REL=$(echo $PKGVER | grep -o "\." | grep -c "\.")'
+  - "echo $PKGVER $REL"
+  # Build binary and remove the source archive
   - "R CMD INSTALL --build FLCore_$PKGVER.tar.gz"
+  - "rm FLCore_$PKGVER.tar.gz"
   # Look for packages
-  - "export RELEASE_PKG_FILE=$(ls FLCore_$PKGVER_R*gz)"
+  - "export RELEASE_PKG_FILE=$(ls FLCore*gz)"
   - "echo $RELEASE_PKG_FILE"
 deploy:
   provider: releases
@@ -30,4 +33,5 @@ deploy:
   skip_cleanup: true
   draft: true
   on:
+    condition: $REL = "2"
     repo: iambaim/FLCore
